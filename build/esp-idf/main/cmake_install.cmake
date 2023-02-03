@@ -1,4 +1,4 @@
-# Install script for directory: C:/ESP_Projects/gatt_server/main
+# Install script for directory: C:/ESP_Projects/BLE_Logic_Analyzer/BLE_Logic_Analyzer/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

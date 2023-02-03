@@ -12,6 +12,7 @@
     "type_traits": "c",
     "utility": "c",
     "adc.h": "c",
-    "esp_bt_main.h": "c"
+    "esp_bt_main.h": "c",
+    "chrono": "c"
   }
 }

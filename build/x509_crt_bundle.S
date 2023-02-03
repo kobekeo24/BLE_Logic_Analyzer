@@ -1,4 +1,4 @@
-/* * Data converted from C:/ESP_Projects/gatt_server/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/ESP_Projects/BLE_Logic_Analyzer/BLE_Logic_Analyzer/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

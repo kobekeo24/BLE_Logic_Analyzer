@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/ESP_Projects/gatt_server/build/esp-idf/mbedtls/mbedtls/cmake_install.cmake")
+  include("C:/ESP_Projects/BLE_Logic_Analyzer/BLE_Logic_Analyzer/build/esp-idf/mbedtls/mbedtls/cmake_install.cmake")
 endif()
 

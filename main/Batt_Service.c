@@ -41,7 +41,7 @@ void gatts_profile_b_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gat
         if (!param->write.is_prep){
             ESP_LOGI(GATTS_TAG, "GATT_WRITE_EVT, value len %d, value :", param->write.len);
             esp_log_buffer_hex(GATTS_TAG, param->write.value, param->write.len);
-            if (gl_profile_tab[PROFILE_B_APP_ID].descr_handle == param->write.handle && param->write.len == 2){
+            if (gl_profile_tab[PROFILE_B_APP_ID].charList[0].descr_handle == param->write.handle && param->write.len == 2){
                 uint16_t descr_value= param->write.value[1]<<8 | param->write.value[0];
                 if (descr_value == 0x0001){
                     if (b_property & ESP_GATT_CHAR_PROP_BIT_NOTIFY){
@@ -52,7 +52,7 @@ void gatts_profile_b_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gat
                             notify_data[i] = i%0xff;
                         }
                         //the size of notify_data[] need less than MTU size
-                        esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile_tab[PROFILE_B_APP_ID].char_handle,
+                        esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile_tab[PROFILE_B_APP_ID].charList[0].char_handle,
                                                 sizeof(notify_data), notify_data, false);
                     }
                 }else if (descr_value == 0x0002){
@@ -64,7 +64,7 @@ void gatts_profile_b_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gat
                             indicate_data[i] = i%0xff;
                         }
                         //the size of indicate_data[] need less than MTU size
-                        esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile_tab[PROFILE_B_APP_ID].char_handle,
+                        esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gl_profile_tab[PROFILE_B_APP_ID].charList[0].char_handle,
                                                 sizeof(indicate_data), indicate_data, true);
                     }
                 }
@@ -92,12 +92,12 @@ void gatts_profile_b_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gat
     case ESP_GATTS_CREATE_EVT:
         ESP_LOGI(GATTS_TAG, "CREATE_SERVICE_EVT, status %d,  service_handle %d\n", param->create.status, param->create.service_handle);
         gl_profile_tab[PROFILE_B_APP_ID].service_handle = param->create.service_handle;
-        gl_profile_tab[PROFILE_B_APP_ID].char_uuid.len = ESP_UUID_LEN_16;
-        gl_profile_tab[PROFILE_B_APP_ID].char_uuid.uuid.uuid16 = GATTS_CHAR_UUID_TEST_B;
+        gl_profile_tab[PROFILE_B_APP_ID].charList[0].char_uuid.len = ESP_UUID_LEN_16;
+        gl_profile_tab[PROFILE_B_APP_ID].charList[0].char_uuid.uuid.uuid16 = GATTS_CHAR_UUID_TEST_B;
 
         esp_ble_gatts_start_service(gl_profile_tab[PROFILE_B_APP_ID].service_handle);
         b_property = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_WRITE | ESP_GATT_CHAR_PROP_BIT_NOTIFY;
-        esp_err_t add_char_ret =esp_ble_gatts_add_char( gl_profile_tab[PROFILE_B_APP_ID].service_handle, &gl_profile_tab[PROFILE_B_APP_ID].char_uuid,
+        esp_err_t add_char_ret =esp_ble_gatts_add_char( gl_profile_tab[PROFILE_B_APP_ID].service_handle, &gl_profile_tab[PROFILE_B_APP_ID].charList[0].char_uuid,
                                                         ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
                                                         b_property,
                                                         NULL, NULL);
@@ -111,15 +111,15 @@ void gatts_profile_b_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gat
         ESP_LOGI(GATTS_TAG, "ADD_CHAR_EVT, status %d,  attr_handle %d, service_handle %d\n",
                  param->add_char.status, param->add_char.attr_handle, param->add_char.service_handle);
 
-        gl_profile_tab[PROFILE_B_APP_ID].char_handle = param->add_char.attr_handle;
-        gl_profile_tab[PROFILE_B_APP_ID].descr_uuid.len = ESP_UUID_LEN_16;
-        gl_profile_tab[PROFILE_B_APP_ID].descr_uuid.uuid.uuid16 = ESP_GATT_UUID_CHAR_CLIENT_CONFIG;
-        esp_ble_gatts_add_char_descr(gl_profile_tab[PROFILE_B_APP_ID].service_handle, &gl_profile_tab[PROFILE_B_APP_ID].descr_uuid,
+        gl_profile_tab[PROFILE_B_APP_ID].charList[0].char_handle = param->add_char.attr_handle;
+        gl_profile_tab[PROFILE_B_APP_ID].charList[0].descr_uuid.len = ESP_UUID_LEN_16;
+        gl_profile_tab[PROFILE_B_APP_ID].charList[0].descr_uuid.uuid.uuid16 = ESP_GATT_UUID_CHAR_CLIENT_CONFIG;
+        esp_ble_gatts_add_char_descr(gl_profile_tab[PROFILE_B_APP_ID].service_handle, &gl_profile_tab[PROFILE_B_APP_ID].charList[0].descr_uuid,
                                      ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
                                      NULL, NULL);
         break;
     case ESP_GATTS_ADD_CHAR_DESCR_EVT:
-        gl_profile_tab[PROFILE_B_APP_ID].descr_handle = param->add_char_descr.attr_handle;
+        gl_profile_tab[PROFILE_B_APP_ID].charList[0].descr_handle = param->add_char_descr.attr_handle;
         ESP_LOGI(GATTS_TAG, "ADD_DESCR_EVT, status %d, attr_handle %d, service_handle %d\n",
                  param->add_char_descr.status, param->add_char_descr.attr_handle, param->add_char_descr.service_handle);
         break;
