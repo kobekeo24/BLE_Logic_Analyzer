@@ -112,9 +112,9 @@ void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gat
         rsp.attr_value.handle = param->read.handle;
         rsp.attr_value.len = 2;
         uint16_t adcVal = getADCVal(CHANNEL_A_ADC);
-        rsp.attr_value.value[0] = adcVal >> 8;
-        rsp.attr_value.value[1] = adcVal & (0xff);
-        ESP_LOGI(GATTS_TAG, "ADC Channel A value: %d\n",adcVal);
+        rsp.attr_value.value[0] = milliVolts(adcVal) >> 8;
+        rsp.attr_value.value[1] = milliVolts(adcVal) & (0xff);
+        ESP_LOGI(GATTS_TAG, "ADC Channel A value: %d\n",milliVolts(adcVal));
         esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id,
                                     ESP_GATT_OK, &rsp);
         break;

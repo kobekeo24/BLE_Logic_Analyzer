@@ -15,7 +15,11 @@
 
 #define GATTS_MAX_CHARS             20
 
-#define PREPARE_BUF_MAX_SIZE 1024
+#define PREPARE_BUF_MAX_SIZE        1024
+
+#define VREF                        3.3
+
+#define milliVolts(analogVal)       (uint16_t)( (analogVal* (VREF*1000) )/4095 )
 
 #define GATTS_TAG "GATTS_DEMO"
 
